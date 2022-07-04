@@ -1,0 +1,22 @@
+{
+  "name": "MyProj",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "server": "nodemon main.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "concurrently": "^7.2.2",
+    "config": "^3.3.7",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-ejs-layouts": "^2.5.1",
+    "moment": "^2.29.3",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3",
+    "winston": "^3.8.0"
+  }
+}

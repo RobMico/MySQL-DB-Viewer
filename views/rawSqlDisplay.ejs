@@ -1,0 +1,29 @@
+
+<div id="box"></div>
+
+<script>
+    var arr =<%-JSON.stringify(data)%>;
+    var html = "<table border='1|1'>";
+    if(arr.length>0)
+    {
+        html+="<tr>";
+        for(var j=0;j<arr[0].length;j++)
+        {
+            html+="<th>"+arr[0][j][0]+"</th>";
+        }
+        html+="</tr>";
+    }
+    for (var i = 0; i < arr.length; i++) {
+        html+="<tr>";
+        for(var j=0;j<arr[i].length;j++)
+        {
+            html+="<td>"+arr[i][j][1]+"</td>";
+        }
+        html+="</tr>";
+
+    }
+    html+="</table>";
+    document.getElementById("box").innerHTML = html;
+
+</script>
+

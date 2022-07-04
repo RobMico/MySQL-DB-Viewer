@@ -1,0 +1,8 @@
+<form method="post" action="/connect">
+    <div>Connection params</div>
+    <label>host:</label><input type="text" name="host" value="<%=params.host?params.host:''%>">
+    <label>user:</label><input type="text" name="user" value="<%=params.user?params.user:''%>"/>
+    <label>database:</label><input type="text" name="database" value="<%=params.database?params.database:''%>"/>
+    <label>password:</label><input type="password" name="password" value="<%=params.password?params.password:''%>"/>
+    <button type="submit">Connect</button>
+</form>

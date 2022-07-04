@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <%if(typeof tables !== 'undefined'){%>
+        <%for(i=0;i<tables.length;i++){%>
+            <a href="/table/<%=tables[i]%>"><%=tables[i]%></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%}}else{%>
+        an error occurred
+    <%}%>
+    <a href="rawsql">rawSql</a>
+    <form method="POST" action="/updateschema">
+        <button type="submit">update structure</button>
+    </form>
+    <%-body%>
+    
+</body>
+</html>
+
+
+
+<!-- <a href="/providers">providers</a> |
+<a href="/executors">executors</a> |
+<a href="/finalaccountiong">finalaccountiong</a> |
+<a href="/exhibits">exhibits</a> |
+<a href="/expenditures">expenditures</a> |
+<a href="/incomes">incomes</a> -->
+
+
+

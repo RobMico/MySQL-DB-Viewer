@@ -1,0 +1,234 @@
+<!-- top panel buttons -->
+<div><a href="/table/<%=table%>/new">NEW ELEMENT</a></div>
+
+
+
+<!-- search form -->
+<form method="GET" action="/table/<%=table%>">
+    <%var j=0;%>
+    <%for(i=0;i<schema.length;i++){%>
+        <%if(schema[i][1]=='varchar' || schema[i][1]=='text'){%>
+            <label><%=schema[i][0]%>:</label><input type="text" value="" name="!<%=schema[i][0]%>">
+            <%j+=1;%>
+        <%}%>
+        <%if(schema[i][1]=='int' || schema[i][1]=='decimal'){%>
+            <label>Max <%=schema[i][0]%>:</label><input type="number" value="" name="MAX!<%=schema[i][0]%>">
+            <%j+=1;%>
+            <label>Min <%=schema[i][0]%>:</label><input type="number" value="" name="MIN!<%=schema[i][0]%>">
+            <%j+=1;%>
+    <%}}%>
+    <button type="submit">Search</button>
+</form>
+
+
+<!-- table of content -->
+<table border="4" class="table_sort">
+    <tr>
+        <!-- Get all attributes from schema-->
+        <% for(var i=0; i<schema.length; i++) {%>            
+            <th><%=schema[i][0]%></th>            
+         <% } %>
+    </tr>
+    <!-- Get content -->
+    <% for(var i=0; i<result.length; i++) {%>      
+        <%var id;%>
+        <tr>
+            <% for(var k=0; k<result[i].length; k++) {%>
+                <%if(schema[k][2].includes("MUL")){%>
+                    <td><a href="/table/<%=schema[k][3]%>/edit/<%=result[i][k][1]%>"><%=result[i][k][1]%></a></td>
+                <%}else{%>
+                    <td><%=result[i][k][1]%></td>
+                <%}%>
+                <%if(result[i][k][0]==idColumn){id=result[i][k][1]}%>
+            <%}%>            
+            <td><form action="/table/<%=table%>/edit/<%=id%>" method="GET"><button type="submit">edit</button></form></td>
+            <td><form action="/table/<%=table%>/delete/<%=id%>" method="post"><button type="submit">remove</button></form></td>
+        </tr>
+    <% } %>         
+</table>
+
+
+
+
+
+<!-- Pagination -->
+<div id="pagination">
+</div>
+
+<style>
+#pagination {
+    display: inline-block;
+}
+
+#pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+.table_sort table {
+    border-collapse: collapse;
+}
+
+.table_sort th {
+    color: #ffebcd;
+    background: #008b8b;
+    cursor: pointer;
+}
+
+.table_sort td,
+.table_sort th {
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    border: 2px solid #846868;
+}
+
+.table_sort tbody tr:nth-child(even) {
+    background: #e3e3e3;
+}
+
+th.sorted[data-order="1"],
+th.sorted[data-order="-1"] {
+    position: relative;
+}
+
+th.sorted[data-order="1"]::after,
+th.sorted[data-order="-1"]::after {
+    right: 8px;
+    position: absolute;
+}
+
+th.sorted[data-order="-1"]::after {
+	content: "▼"
+}
+
+th.sorted[data-order="1"]::after {
+	content: "▲"
+}
+</style>
+
+<script>
+    var arr=[0, 1, 2, <%=(currentPage-1)%>, <%=(currentPage)%>, <%=(currentPage+1)%>, <%=(pagesCount-1)%>, <%=(pagesCount)%>];
+    var currentPage = <%=currentPage%>;
+    var maxPage = <%=pagesCount%>;
+
+    const filtered = arr.filter((it, index) => index === arr.indexOf(it)&&it>=0&&it<=maxPage).sort();    
+    
+    var link = window.location.href;
+    link = link.replace(new RegExp('&?p=[0-9]*'), '');
+    link+=link.includes('?')?'':'?';
+
+    var pagination = document.getElementById('pagination');
+    if(filtered.length>1)
+    {
+        var i=0;
+        filtered.forEach(el=>{
+            var linkEl = document.createElement('a');
+            linkEl.href=link+'&p='+el;
+            linkEl.innerText=el;
+            if(el==currentPage)
+            {                
+                linkEl.style.border='2px solid black'
+            }
+
+            pagination.appendChild(linkEl);
+            if(filtered[i+1]&&(filtered[i]+1)!=filtered[i+1])
+            {
+                var tmp = document.createElement('a');
+                tmp.innerText='...'
+                pagination.appendChild(tmp);
+            }
+            i++;
+        });
+    }
+
+</script>
+
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        var link = window.location.href;
+
+        var _orderby = link.match(new RegExp('&?orderby=[^&]*'))
+        if(_orderby)
+        {
+            _orderby=_orderby[0].split('=')[1];
+        }else{_orderby='';}
+        console.log(_orderby);
+
+        var desc = link.match(new RegExp('&?orderdesc=[^&]*'))
+        if(desc)
+        {
+            desc=desc[0].split('=')[1];
+        }else{desc='';}
+        console.log(desc);
+
+        link = link.replace(new RegExp('&?orderby=[^&]*'), '');
+        link = link.replace(new RegExp('&?orderdesc=[^&]*'), '');
+        link+=link.includes('?')?'':'?';
+
+        
+
+        console.log(link);
+        var arr = Array.from(document.getElementsByTagName('th'))
+        arr.forEach(el=>{
+            
+            var orderby = el.innerText;
+            var ascending = document.createElement('a');
+            ascending.innerText = ` ↓`;
+            ascending.href = link+'&orderby='+orderby+'&orderdesc=false';
+            ascending.style.textDecoration="none"
+            ascending.style.color="red"
+
+            var descending = document.createElement('a');
+            descending.innerText = ' ↑';
+            descending.href = link+'&orderby='+orderby+'&orderdesc=true';
+            descending.style.textDecoration="none"
+            descending.style.color="red"
+            el.appendChild(ascending);
+            el.appendChild(descending);
+
+            if(orderby==_orderby)
+            {
+                if(desc=='true')
+                {
+                    descending.style.color="black"
+                }else{
+                    ascending.style.color="black"
+                }
+            }
+
+        });
+        // const getSort = ({ target }) => {
+            
+        //     const order = (target.dataset.order = -(target.dataset.order || -1));            
+        //     const index = [...target.parentNode.cells].indexOf(target);            
+        //     const collator = new Intl.Collator(['en', 'ru'], { numeric: true });
+            
+        //     const comparator = (index, order) => (a, b) => {                                             
+        //         if(b.children[index].tagName=='TH')
+        //         {
+        //             return 0;
+        //         }
+        //         var t=order * collator.compare(                
+        //             a.children[index].innerHTML,
+        //             b.children[index].innerHTML
+        //         );                
+        //         return t;};
+    
+        //     for(const tBody of target.closest('table').tBodies){ 
+                
+        //         tBody.append(...[...tBody.rows].sort(comparator(index, order)));
+        //     }
+        //     for(const cell of target.parentNode.cells){
+        //         cell.classList.toggle('sorted', cell === target);
+        //     }
+        // };
+
+        // document.querySelectorAll('.table_sort tr th').forEach(tableTH => {
+        //     tableTH.addEventListener('click', () => getSort(event))            
+        // });
+    });
+</script>

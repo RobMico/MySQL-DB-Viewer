@@ -3,7 +3,7 @@ var myObj={};
 
 
 
-myObj.pageSize=2;
+myObj.pageSize=50;
 
 
 //Map objects

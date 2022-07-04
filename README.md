@@ -19,7 +19,7 @@ nano default.json
 #Paste here somthing like this
 
 ```
-{<br />
+{
     "port":3000,
     "autoConnectDB":false,
     "DB":{

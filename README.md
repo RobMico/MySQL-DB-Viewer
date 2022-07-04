@@ -27,7 +27,7 @@ nano default.json<br />
         "multipleStatements": true<br />
     }<br />
 }<br />
-```
-cd ..
+````
+cd ..<br />
 node main.js
-```
+````

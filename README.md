@@ -1,11 +1,9 @@
 # MySQL-DB-Viewer
 <h4>This is mysql db oserver</h4>
-Database requirements
-One unique key per table, numeric or text type
+Database requirements<br/>
+One unique key per table, numeric or text type<br />
 
-
-
-Run:
+<h4>Run:<h4>
 git clone https://github.com/RobMico/MySQL-DB-Viewer.git
 cd MySQL-DB-Viewer
 npm i
